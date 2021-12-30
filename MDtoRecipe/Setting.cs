@@ -13,10 +13,14 @@ namespace MDtoRecipe
     {
         public string TargetDirectory { get; set; }
 
-        private readonly string FilePath = Path.Combine(
+        public string OutputDirectory { get; set; }
+
+        public string[] ExcludePaths { get; set; }
+
+        private static readonly string FilePath = Path.Combine(
             Path.GetTempPath(), "MDtoRecipe", "setting.json");
 
-        public Setting Deserialize()
+        public static Setting Deserialize()
         {
             Setting setting = null;
 

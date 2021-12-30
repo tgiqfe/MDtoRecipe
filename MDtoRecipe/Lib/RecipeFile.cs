@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace MDtoRecipe.Lib
+namespace WinBM.PowerShell.Lib.MDtoRecipe
 {
     internal class RecipeFile
     {

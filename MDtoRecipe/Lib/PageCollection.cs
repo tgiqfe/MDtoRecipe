@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace MDtoRecipe.Lib
+namespace WinBM.PowerShell.Lib.MDtoRecipe
 {
     internal class PageCollection : Dictionary<string, List<PagePart>>
     {

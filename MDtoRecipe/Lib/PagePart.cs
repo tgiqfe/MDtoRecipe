@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MDtoRecipe.Lib
+namespace WinBM.PowerShell.Lib.MDtoRecipe
 {
     internal class PagePart
     {
