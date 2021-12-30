@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace MDtoRecipe.Lib
 {
-    internal class RecipePagePart
+    internal class PagePart
     {
         public int Index { get; set; }
-        public string FileName { get; set; }
         public string Content { get; set; }
+
+        public PagePart(int index)
+        {
+            this.Index = index;
+        }
     }
 }

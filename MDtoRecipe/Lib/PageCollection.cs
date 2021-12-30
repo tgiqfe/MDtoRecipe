@@ -8,28 +8,24 @@ using System.Text.RegularExpressions;
 
 namespace MDtoRecipe.Lib
 {
-    internal class RecipePages
+    internal class PageCollection : Dictionary<string, List<PagePart>>
     {
-        public Dictionary<string, List<RecipePagePart>> Collection { get; set; }
-
         private int _Index { get; set; }
 
         private Regex pattern_ymlStart = new Regex(@"```ya?ml[\s:].+\.ya?ml$");
         private string pattern_ymlEnd = "```";
         private Regex pattern_yamlFileName = new Regex(@"(?<=```ya?ml[\s:]).+");
 
-        public RecipePages()
-        {
-            this.Collection = new Dictionary<string, List<RecipePagePart>>();
-        }
+        public PageCollection() { }
 
-        public void ReadFile(string filePath)
+        public void Add(string filePath)
         {
             using (var sr = new StreamReader(filePath, Encoding.UTF8))
             {
                 string readLine = "";
                 bool during = false;
-                RecipePagePart part = null;
+                string tempFileName = "";
+                PagePart part = null;
                 while ((readLine = sr.ReadLine()) != null)
                 {
                     if (during)
@@ -46,25 +42,42 @@ namespace MDtoRecipe.Lib
                         }
                         part.Content = sb.ToString();
 
-                        if (!this.Collection.ContainsKey(part.FileName))
+                        if (!this.ContainsKey(tempFileName))
                         {
-                            this.Collection[part.FileName] = new List<RecipePagePart>();
+                            this[tempFileName] = new List<PagePart>();
                         }
-                        this.Collection[part.FileName].Add(part);
-
+                        this[tempFileName].Add(part);
                         during = false;
                     }
-                    if (pattern_ymlStart.IsMatch(readLine))
+                    else if (pattern_ymlStart.IsMatch(readLine))
                     {
-                        part = new RecipePagePart()
-                        {
-                            Index = ++_Index,
-                            FileName = pattern_yamlFileName.Match(readLine).Value,
-                        };
+                        tempFileName = pattern_yamlFileName.Match(readLine).Value;
+                        part = new PagePart(++_Index);
                         during = true;
                     }
                 }
             }
+        }
+
+        public List<RecipeFile> ToRecipeFileList()
+        {
+            List<RecipeFile> list = new List<RecipeFile>();
+
+            foreach (var pair in this)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (PagePart part in pair.Value.OrderBy(x => x.Index))
+                {
+                    sb.AppendLine(part.Content);
+                }
+                list.Add(new RecipeFile()
+                {
+                    FileName = pair.Key,
+                    Content = sb.ToString(),
+                });
+            }
+
+            return list;
         }
     }
 }
