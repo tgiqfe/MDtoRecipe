@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MDtoRecipe.Lib
+namespace WinBM.PowerShell.Lib.MDtoRecipe
 {
-    internal class RecipePagePart
+    internal class PagePart
     {
         public int Index { get; set; }
-        public string FileName { get; set; }
+        public string SourceFile { get; set; }
         public string Content { get; set; }
     }
 }
