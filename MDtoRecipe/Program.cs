@@ -12,7 +12,7 @@ namespace MDtoRecipe
     {
         public static void Main(string[] args)
         {
-            Setting setting = Setting.Deserialize();
+            Setting setting = Setting.Load();
 
             //  Setting内に記載が無い場合
             if (string.IsNullOrEmpty(setting.TargetDirectory))
@@ -21,9 +21,10 @@ namespace MDtoRecipe
                 if (string.IsNullOrEmpty(setting.TargetDirectory))
                 {
                     Console.WriteLine("未指定の為、終了");
+                    Console.ReadLine();
                     return;
                 }
-                setting.Serialize();
+                setting.Save();
             }
 
             //  対象フォルダーに変更が無いか確認
@@ -37,15 +38,16 @@ namespace MDtoRecipe
                 if (string.IsNullOrEmpty(setting.TargetDirectory))
                 {
                     Console.WriteLine("未指定の為、終了");
+                    Console.ReadLine();
                     return;
                 }
-                setting.Serialize();
+                setting.Save();
             }
 
             PageCollection pages = new PageCollection();
             foreach (string filePath in Directory.GetFiles(setting.TargetDirectory, "*.md", SearchOption.AllDirectories))
             {
-                if (setting.ExcludePaths.Any(x => x.Equals(filePath, StringComparison.OrdinalIgnoreCase)))
+                if (setting.ExcludePaths?.Any(x => x.Equals(filePath, StringComparison.OrdinalIgnoreCase)) ?? false)
                 {
                     continue;
                 }

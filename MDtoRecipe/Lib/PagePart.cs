@@ -9,11 +9,7 @@ namespace WinBM.PowerShell.Lib.MDtoRecipe
     internal class PagePart
     {
         public int Index { get; set; }
+        public string SourceFile { get; set; }
         public string Content { get; set; }
-
-        public PagePart(int index)
-        {
-            this.Index = index;
-        }
     }
 }

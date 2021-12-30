@@ -23,13 +23,19 @@ namespace WinBM.PowerShell.Lib.MDtoRecipe
             using (var sr = new StreamReader(filePath, Encoding.UTF8))
             {
                 string readLine = "";
-                bool during = false;
                 string tempFileName = "";
                 PagePart part = null;
                 while ((readLine = sr.ReadLine()) != null)
                 {
-                    if (during)
+                    if (pattern_ymlStart.IsMatch(readLine))
                     {
+                        tempFileName = pattern_yamlFileName.Match(readLine).Value;
+                        part = new PagePart()
+                        {
+                            Index = ++_Index,
+                            SourceFile = filePath,
+                        };
+
                         StringBuilder sb = new StringBuilder();
                         string codeBlockLine = "";
                         while ((codeBlockLine = sr.ReadLine()) != null)
@@ -47,13 +53,6 @@ namespace WinBM.PowerShell.Lib.MDtoRecipe
                             this[tempFileName] = new List<PagePart>();
                         }
                         this[tempFileName].Add(part);
-                        during = false;
-                    }
-                    else if (pattern_ymlStart.IsMatch(readLine))
-                    {
-                        tempFileName = pattern_yamlFileName.Match(readLine).Value;
-                        part = new PagePart(++_Index);
-                        during = true;
                     }
                 }
             }
@@ -74,6 +73,7 @@ namespace WinBM.PowerShell.Lib.MDtoRecipe
                 {
                     FileName = pair.Key,
                     Content = sb.ToString(),
+                    RecipeFiles = pair.Value.Select(x => x.SourceFile).Distinct().ToList(),
                 });
             }
 
