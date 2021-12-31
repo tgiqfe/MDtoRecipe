@@ -11,11 +11,11 @@ namespace MDtoRecipe
 {
     internal class Setting
     {
-        public string TargetDirectory { get; set; }
+        public string Source { get; set; }
 
-        public string OutputDirectory { get; set; }
+        public string Output { get; set; }
 
-        public string[] ExcludePaths { get; set; }
+        public string[] Exclude { get; set; }
 
         private static readonly string FilePath = Path.Combine(
             Path.GetTempPath(), "MDtoRecipe", "setting.json");
