@@ -15,10 +15,10 @@ namespace MDtoRecipe
             Setting setting = Setting.Load();
 
             //  Setting内に記載が無い場合
-            if (string.IsNullOrEmpty(setting.TargetDirectory))
+            if (string.IsNullOrEmpty(setting.Source))
             {
-                setting.TargetDirectory = ConfirmTarget();
-                if (string.IsNullOrEmpty(setting.TargetDirectory))
+                setting.Source = ConfirmTarget();
+                if (string.IsNullOrEmpty(setting.Source))
                 {
                     Console.WriteLine("未指定の為、終了");
                     Console.ReadLine();
@@ -29,13 +29,13 @@ namespace MDtoRecipe
 
             //  対象フォルダーに変更が無いか確認
             Console.WriteLine("TargetDirectoryは以下のパスです。続行しますか?");
-            Console.WriteLine("[" + setting.TargetDirectory + "]");
+            Console.WriteLine("[" + setting.Source + "]");
             Console.Write("Y/n > ");
             string read = Console.ReadLine();
             if (read == "n" || read == "N")
             {
-                setting.TargetDirectory = ConfirmTarget();
-                if (string.IsNullOrEmpty(setting.TargetDirectory))
+                setting.Source = ConfirmTarget();
+                if (string.IsNullOrEmpty(setting.Source))
                 {
                     Console.WriteLine("未指定の為、終了");
                     Console.ReadLine();
@@ -45,9 +45,9 @@ namespace MDtoRecipe
             }
 
             PageCollection pages = new PageCollection();
-            foreach (string filePath in Directory.GetFiles(setting.TargetDirectory, "*.md", SearchOption.AllDirectories))
+            foreach (string filePath in Directory.GetFiles(setting.Source, "*.md", SearchOption.AllDirectories))
             {
-                if (setting.ExcludePaths?.Any(x => x.Equals(filePath, StringComparison.OrdinalIgnoreCase)) ?? false)
+                if (setting.Exclude?.Any(x => x.Equals(filePath, StringComparison.OrdinalIgnoreCase)) ?? false)
                 {
                     continue;
                 }
@@ -55,7 +55,7 @@ namespace MDtoRecipe
             }
             foreach (var recipe in pages.ToRecipeFileList())
             {
-                recipe.Write(setting.OutputDirectory);
+                recipe.Write(setting.Output);
             }
 
             Console.ReadLine();
